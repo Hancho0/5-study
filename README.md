@@ -24,73 +24,48 @@ WM_로 시작하는 메시지로 매개변수를 가지고 있어 메시지를 �
 명령 메시지는 메뉴, 툴바, 액셀러레이터 키와 같은 사용자 인터페이스 객체로부터 발생하는 WM_COMMANd 메시지이다. 명령 메시지는 윈도우뿐만 아니라 도큐먼트, 도큐먼트 탬플릿, 뷰, 다른 애플리케이션 객체에 의해 발생할 수도 있다.
 
 * 자주 사용하는 윈도우 관리 메시지와 메시지 핸들러 함수
-  <table>
-    <tr>
-      <th scope="col">메시지 유형</td>
-      <th scope="col">발생 상황</td>
-      <th scope="col">메시지 핸들러 함수</td>
-    </tr>
-    <tr>
-      <td>WM_CREATE</td>
-      <td>윈도우가 생성될 때</td>
-      <td>OnCreate()</td>
-    </tr>
-    <tr>
-      <td>WM_ACTIVE</td>
-      <td>윈도우가 활성화될 때</td>
-      <td>OnActive()</td>
-    </tr>
-    <tr>
-      <td>WM_PAINT</td>
-      <td>윈도우가 다시 그려져야 될 때</td>
-      <td>OnPaint()</td>
-    </tr>
-    <tr>
-      <td>WM_SIZE</td>
-      <td>윈도우가 생성될때<br>윈도우 크기가 변경될 때</td>
-      <td>OnSize()</td>
-    </tr>
-    <tr>
-      <td>WM_MOVE</td>
-      <td>윈도우가 움직일 때</td>
-      <td>OnMove()</td>
-    </tr>
-    <tr>
-      <td>WM_TIMER</td>
-      <td>설정된 타이머 시간이 됐을 때</td>
-      <td>OnTimer()</td>
-    </tr>
-    <tr>
-      <td>WM_DESTORY</td>
-      <td>윈도우가 종료될 때</td>
-      <td>OnDestroy()</td>
-    </tr>
-  </table>
+
+| 메시지 유형 | 발생 상황 | 메시지 핸들러 함수 |
+|---|---|---|
+| WM_CREATE | 윈도우가 생성될 때 | OnCreate() |
+| WM_ACTIVE | 윈도우가 활성화될 때 | OnActive() |
+| WM_PAINT | 윈도우가 다시 그려져야 될 때 | OnPaint() |
+| WM_SIZE | 윈도우가 생성될때<br>윈도우 크기가 변경될 때 | OnSize() |
+| WM_MOVE | 윈도우가 움직일 때 | OnMove() |
+| WM_TIMER | 설정된 타이머 시간이 됐을 때 | OnTimer() |
+| WM_DESTORY | 윈도우가 종료될 때 | OnDestroy() |
 
 메시지 박스 출력 : AfxMessageBox()
 
-<table>
-  <tr>
-    <td>
-      int AfxMessageBox(LPCTSTR lpszText, UINT nType = MB_OK, UINT nIDHelp =0);
-    </td>
-  </tr>
-  <tr>
-      <td>
-      lpszText : 출력하고자 하는 문자열</td>
-      </td>
-    </tr>
-  <tr>
-    <td>
-      nType : 메시지 박스 출력 스타일(버튼, 아이콘)
-    </td>
-  </tr>
-  <tr>
-    <td>
-      nIDHelp : 현재 상태에서 F1 키를 눌러 도움말을 실행하였을 때의 도움말 ID
-    </td>
-  </tr>
-</table>
+| int AfxMessageBox(LPCTSTR lpszText, UINT nType = MB_OK, UINT nIDHelp =0); |
+|--|
+| lpszText : 출력하고자 하는 문자열 |
+| nType : 메시지 박스 출력 스타일(버튼, 아이콘) |
+| nIDHelp : 현재 상태에서 F1 키를 눌러 도움말을 실행하였을 때의 도움말 ID |
+
+* 자주 사용하는 마우스 메시지와 메시지 핸들러 함수
+
+| 메시지 유형 | 발생 상황 | 메시지 핸들러 함수 |
+| --- | --- | --- |
+| WM_MOUSEMOVE | 마우스를 이동 | OnMouseMove() |
+| WM_LBUTTONDBLCLK | 왼쪽 마우스 버튼을 더블 클릭 | OnLButtonDblClk() |
+| WM_LBUTTONDOWN | 왼쪽 마우스 버튼을 누름 | OnLButtonDown() |
+| WM_LBUTTONUP | 왼쪽 마우스 버튼을 놓음 | OnLButtonUp() |
+| WM_RBUTTONDBLCLK | 오른쪽 마우스 버튼을 더블 클릭 | OnRButtonDblClk() |
+| WM_RBUTTONDOWN | 오른쪽 마우스 버튼을 누름 | OnRButtonDown() |
+| WM_RBUTTONUP | 오른쪽 마우스 버튼을 놓음 | OnRButtonUp() |
+| WM_MOUSEWHEEL | 마우스 휠을 움직임 | OnMouseWheel() |
+
+마우스의 메시짖 핸들러 함수들을 살펴보면 nFlags 와 point라는 매개변수를 제공한다.
+nFlags는 버튼이 눌리면서 키보드에서 특정한 키가 눌러졌을 때의 값이나 마우스 눌린 값이다.
+point는 클라이언트 영역의 현재 마우스 좌표값을 CPoint 클래스 형식으로 제공한다.
+윈도우의 클라이언트 영역은 좌측 상단 좌표가 (0, 0)인 상대좌표이다. 다음은 nFlags가 가질 수 있는 값이다.
+
+* MB_CONTROL : Ctrl 키가 눌림
+* MB_LBUTTON : 왼쪽 마우스 버튼 눌림
+* MB_MBUTTON : 가운데 마우스 버튼 눌림
+* MB_RBUTTON : 오른쪽 마우스 버튼 눌림
+* MB_SHIFT : Shift 키가 눌림
 
 [ 실습 ]
 
@@ -140,3 +115,6 @@ void CMFCApplication1View::OnDestroy()
 ```
 코드를 입력 후 메시지 박스 버튼 스타일은 MB_OK, 메시지 박스 아이콘 스타일은 MB_ICONWARNING으로 설정한다.
 
+![캡처](https://github.com/user-attachments/assets/ee808fad-7151-45c1-be77-25a54827f484)
+![캡처2](https://github.com/user-attachments/assets/189ddc3a-e9e7-40b2-a1f7-fbeff63def9a)
+![캡처3](https://github.com/user-attachments/assets/ad38b90b-526c-4ed3-8b60-38fbedd3769b)
