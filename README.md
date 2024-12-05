@@ -268,3 +268,9 @@ void CMFC2View::OnDestroy()
 	if (m_bTimerRun) KillTimer(0); //타이머 해제
 }
 ```
+
+![1](https://github.com/user-attachments/assets/45401040-265d-4fc1-af8c-e08ac0ebde43)<br>
+![2](https://github.com/user-attachments/assets/1085c2c0-fc83-40fb-b511-05521ec63042)<br>
+![3](https://github.com/user-attachments/assets/e46cdfb5-7b01-45b9-9e40-59642ba4bb62)<br>
+![4](https://github.com/user-attachments/assets/6effc489-11be-4202-b2f2-dafd90cf015a)<br>
+
