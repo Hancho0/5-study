@@ -118,3 +118,153 @@ void CMFCApplication1View::OnDestroy()
 ![캡처](https://github.com/user-attachments/assets/ee808fad-7151-45c1-be77-25a54827f484)
 ![캡처2](https://github.com/user-attachments/assets/189ddc3a-e9e7-40b2-a1f7-fbeff63def9a)
 ![캡처3](https://github.com/user-attachments/assets/ad38b90b-526c-4ed3-8b60-38fbedd3769b)
+
+[ 실습 2 ]
+
+CMFC2 클래스에 bool 형식의 m_bTimerRun 변수와 m_bTimerType을 추가해줍니다.
+```ruby
+CMFC2View::CMFC2View() noexcept
+{
+	// TODO: 여기에 생성 코드를 추가합니다.
+	m_bTimerRun = false;
+	m_bTimerType = true;
+}
+```
+
+m_bTimerRun 은 FALSE 로 초기화 하고 m_bTimerType 은 TRUE 로 초기화 해줍니다.
+
+다음으로 OnCreate 메시지 핸들러 함수 추가후 코드를 입력해줍니다.
+```ruby
+int CMFC2View::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
+	SetTimer(0, 1000, NULL); //타이머 설정
+	m_bTimerRun = TRUE; //타이머 동작
+
+	return 0;
+}
+```
+
+| SetTimer() 함수 |
+|---|
+| SetTimer() 함수는 지정된 시간 간격마다 WM_TIMER 메시지를 발생시켜 타이머를 설정하는 함수이다. 함수의 원형은 다음과 같다. |
+| UINT SetTImer(UINT nIDEvent UINT nElapse, TIMERPROC lpTimerFunc) |
+| nIDEvent : 타이머 ID이다. 이 타이머 ID는 OnTimer() 함수의 인자로 전달되며 이를 이용하여 여러 개의타이머를 설정할 수 있다. |
+| nElapse : WM_TIMER 메시지를 발생시킬 시간 간격이다. 사용되는 단위는 1000분의 1초 1000을 적어주면 1초에 한번 씩 WM_TIMER 메시지를 발생시킨다. |
+| lpTimerFunc : WM_TIMER 메시지가 발생하였을 때 실행되는 함수이다. NULL이 설정되면 OnTimer()함수가 호출된다. |
+
+CMFC2 클래스에 CString 형식의 m_strTimer 변수를 추가해줍니다.
+
+그 후 클래스 마법사에서 WM_TIMER 메시지를 선택하여 OnTimer() 함수를 생성합니다.
+
+```ruby
+void CMFC2View::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CView::OnTimer(nIDEvent);
+	int hour;
+	CString str;
+	CTime timer; //타이머 변수 선언
+	timer = CTime::GetCurrentTime(); //현재 시각을 얻음
+
+	if (m_bTimerType){ //년,월,일,시,분,초 형태일 경우
+		m_strTimer.Format(_T("현재는 %d년 %d월 %d일 %d시 %d분 %d초"), timer.GetYear(), timer.GetMonth(), timer.GetDay(), timer.GetHour(), timer.GetMinute(), timer.GetSecond());
+	}
+	else {
+		hour = timer.GetHour();
+		if (hour >= 12)
+		{
+			str = _T("PM");
+			if (hour >= 13)
+				hour = hour - 12;
+		}
+		else
+		{
+			str = _T("AM");
+		}
+		m_strTimer.Format(_T("지금은 %s %d시 %d분 %d초"), str, hour, timer.GetMinute(), timer.GetSecond());
+	}
+	Invalidate();
+	CView::OnTimer(nIDEvent);
+}
+```
+
+```ruby
+void CMFC2View::OnDraw(CDC* pDC) //주석 처리 해제
+{
+	CMFC2Doc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	CRect rect;
+	GetClientRect(&rect); //윈도우 클라이언트 영역을 얻는다.
+	//윈도우의 중앙에 현재 시각을 출력
+	pDC->DrawText(m_strTimer, rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+}
+```
+
+그 후 왼쪽 마우스 버튼을 눌렀을 때 시계 표시 형태를 변경하는 코드를 작성합니다.
+
+OnLButtonDown 메시지 핸들러 함수를 선택하고 코드를 작성해줍니다.
+```ruby
+void CMFC2View::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	if (m_bTimerType) //년, 월, 일, 시 ,분, 초 형태로 출력 중
+	{
+		if (AfxMessageBox(_T("시 분 초 형태로 표시하겠습니까?"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
+			m_bTimerType = FALSE;
+		}
+	}
+	else {
+		if (AfxMessageBox(_T("년, 월, 일, 시, 분, 초 형태로 표시하겠습니까?"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
+			m_bTimerType = TRUE;
+		}
+	}
+	CView::OnLButtonDown(nFlags, point);
+}
+```
+
+오른쪽 마우스 버튼을 눌렀을 때 시계의 동작 여부를 결정합니다.
+```ruby
+void CMFC2View::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	
+	if (m_bTimerRun == FALSE) // 타이머가 동작 안 할 때 메시지 박스 출력
+	{
+		if (AfxMessageBox(_T("디지털시계를 동작시키겠습니까?"), MB_YESNO | MB_ICONQUESTION) == IDYES)
+		{
+			SetTimer(0, 1000, NULL); //타이머 설정
+			m_bTimerRun = TRUE; //타이머 동작 => true
+		}
+	}
+	else { //타이머가 동작 중일 때 메시지 박스 출력
+		if (AfxMessageBox(_T("정말로 디지털 시계 동작을 멈추겠습니까?"), MB_YESNO | MB_ICONQUESTION) == IDYES)
+		{
+			KillTimer(0);
+			m_bTimerRun = FALSE;
+		}
+	}
+
+	CView::OnRButtonDown(nFlags, point);
+}
+```
+
+마지막으로 WM_DESTORY 를 추가하고 코드를 작성합니다
+```ruby
+void CMFC2View::OnDestroy()
+{
+	CView::OnDestroy();
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (m_bTimerRun) KillTimer(0); //타이머 해제
+}
+```
