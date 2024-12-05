@@ -1,7 +1,7 @@
 # 5주차 Study [ 2024-12-01 ~ 2024-12-06 ]
 
 **[ 목표 ]**
-- 이번주 목표 : 
+- 이번주 목표 : 메시지 처리 배우기기
 -----
 
 **[ 진행 사항 ]**
@@ -273,4 +273,6 @@ void CMFC2View::OnDestroy()
 ![2](https://github.com/user-attachments/assets/1085c2c0-fc83-40fb-b511-05521ec63042)<br>
 ![3](https://github.com/user-attachments/assets/e46cdfb5-7b01-45b9-9e40-59642ba4bb62)<br>
 ![4](https://github.com/user-attachments/assets/6effc489-11be-4202-b2f2-dafd90cf015a)<br>
+
+-------
 
